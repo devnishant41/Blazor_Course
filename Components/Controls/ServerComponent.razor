@@ -1,0 +1,78 @@
+﻿@if (server != null)
+{
+
+    @* enhanced server interacityvy *@
+
+    @* <EditForm Model="server" Enhance="true" FormName="serverComponentForm" OnSubmit="ChangeServerStatus">
+
+        <InputNumber @bind-Value="server.ServerId" hidden> </InputNumber>
+        <InputText @bind-Value="server.Name" hidden></InputText>
+        <InputText @bind-Value="server.City" hidden></InputText>
+        <InputCheckbox @bind-Value="server.IsOnline" hidden></InputCheckbox>
+
+
+        <p>
+            @server.Name is in @server.City
+        </p>
+        <p data-name="@server.Name" style="color:@(server.IsOnline?"green":"red")">
+            @server.Name is in @server.City , Server is @(server.IsOnline ? "Online" : "Offline")
+        </p>
+        <p data-name="@server.Name" style="@($"color:{(server.IsOnline?"blue" : "yellow")}")">
+            @server.Name is in @server.City , Server is @(server.IsOnline ? "Online" : "Offline")
+        </p>
+
+        <button type="submit" class="btn btn-primary">Turn On/Off </button>
+
+    </EditForm> *@
+
+
+
+    @* acutal server inteacitivy *@
+    <div>
+        <p data-name="@server.Name" style="color:@(server.IsOnline?"green":"red")">
+            @server.Name is in @server.City , Server is @(server.IsOnline ? "Online" : "Offline")
+        </p>
+        <p data-name="@server.Name" style="@($"color:{(server.IsOnline?"blue" : "yellow")}")">
+            @server.Name is in @server.City , Server is @(server.IsOnline ? "Online" : "Offline")
+        </p>
+
+        <button type="button" class="btn btn-primary" @onclick="ChangeStatus">Turn On/Off </button>
+    </div>
+
+}
+
+
+@code {
+
+
+
+
+    //enhanced server inteacitvity
+    // [SupplyParameterFromForm]
+    // private Server? server { get; set; } // = new Server { Name = "Server 1", City = "Toronto" };
+
+    // protected override void OnParametersSet()
+    // {
+    //     server ??= new Server { Name = "Server 1", City = "Toronto" };
+    // }
+
+    // private void ChangeServerStatus()
+    // {
+    //     if (server != null)
+    //     {
+    //         server.IsOnline = !server.IsOnline;
+    //     }
+    // }
+
+
+    //server inteactivity
+    private Server? server = new Server { Name = "Server 1", City = "Toronto" };
+
+    private void ChangeStatus()
+    {
+        if (server != null)
+        {
+            this.server.IsOnline = !this.server.IsOnline;
+        }
+    }
+}
