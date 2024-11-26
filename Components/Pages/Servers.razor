@@ -3,136 +3,55 @@
 @inject NavigationManager NavigationManager
 <h3>Servers</h3>
 
-<div class="container-fluid text-center mb-5">
-    <div class="row w-80">
-        @foreach (var city in cities)
-        {
+<CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection"> </CityListComponent>
 
-            <div class="col">
-                <div class="card" style="background-color:@(city == selectedCity ? "blue" : "white" )">
-                    <img src="@($"/images/{city}.jpg")" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary btn-sm" @onclick="@(()=>{SelectCity(city);})">@city</button>
-                        <text>&nbsp;</text>
-                    </div>
-
-                </div>
-            </div>
-        }
-    </div>
-</div>
-
-@*
 <br />
-<ServerComponent @rendermode="InteractiveServer"></ServerComponent>
-<br />
- *@
 
-@* searchbar *@
+<SearchBarComponent @ref="searchBarComponent" SearchServerCallback="HandleSearchServer"></SearchBarComponent>
 
-@* <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Search Servers" @onchange="HandleServerFilterChanged">
-    <button class="btn btn-outline-secondary" type="button" id="button-search" @onclick="HandleSearch">Search</button>
-</div> *@
+<CascadingValue Name="SelectedCity" Value="@Selectedcity"> 
+    @* <ServerListComponent @rendermode="InteractiveServer" CityName="@this.selectedCity"></ServerListComponent> *@
 
-@* make note of v & V => edit form  *@
-@* for two way data binding *@
-@* <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Search Servers" @bind-value="serverFilter">
-    <button class="btn btn-outline-secondary" type="button" id="button-search" @onclick="HandleSearch">Search</button>
-</div> *@
+    <ServerListComponent @rendermode="InteractiveServer" CityName="@this.Selectedcity" SearchFilter="@searchFilter"></ServerListComponent>
 
-@* on direct input change  *@
-<div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Search Servers" @bind-value="serverFilter" @bind-value:event="oninput">
-    <button class="btn btn-outline-secondary" type="button" id="button-search" @onclick="HandleSearch">Search</button>
-</div>
-
-
-
-@serverFilter
-
-<div>
-    <ul>
-        @foreach (var server in servers)
-        {
-            <li class="d-flex   align-content-center">
-                @server.Name in @server.City is
-                <span style="color:@(server.IsOnline?"red":"blue")">
-                    @(server.IsOnline ? "Online" : "Offline")
-                </span>
-                <a href="/servers/@server.ServerId" class="btn btn-link">Edit</a>
-                <EditForm Model="server" FormName="@($"form-server-{server.ServerId}")" OnValidSubmit="@(()=>{DeleteServer(server.ServerId);})">
-
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-
-                </EditForm>
-            </li>
-
-        }
-
-        @* virtualzitoin *@
-        <Virtualize Items="this.servers" Context="server">
-            <ul>
-                <li>@server.Name</li>
-            </ul>
-        </Virtualize>
-
-
-    </ul>
-</div>
+</CascadingValue>
 
 <div class="mt-4">
     <a href="/servers/add" class="btn btn-primary">Add Server</a>
 </div>
 
-<p></p>
 
 @code {
-    private List<Server> servers = ServerRepository.GetServerByCity("London");
-
-    private List<string> cities = CityRepository.GetCities();
-
-    private string selectedCity = "London";
-
     // private string serverFilter = string.Empty;
+    private string Selectedcity = "London";
 
-    private string _serverFilter = "";
-    private string serverFilter
-    {
-        get => _serverFilter;
-        set
-        {
-            _serverFilter = value;
-            this.servers = ServerRepository.SearchServers(_serverFilter);
-        }
-    }
+    private string searchFilter = "";
 
-    private void DeleteServer(int serverId)
-    {
-        if (serverId > 0)
-        {
+    private CityListComponent? cityListComponent;
 
-            ServerRepository.DeleteServer(serverId);
-        }
-        NavigationManager.NavigateTo("/servers");
-    }
+    private SearchBarComponent? searchBarComponent;
 
-
-    private void SelectCity(string city)
-    {
-        this.selectedCity = city;
-        this.servers = ServerRepository.GetServerByCity(this.selectedCity);
-    }
-
-    private void HandleServerFilterChanged(ChangeEventArgs args)
-    {
-        serverFilter = args.Value?.ToString() ?? string.Empty;
-    }
+    // private void HandleServerFilterChanged(ChangeEventArgs args)
+    // {
+    //     serverFilter = args.Value?.ToString() ?? string.Empty;
+    // }
 
     private void HandleSearch()
     {
-        this.servers = ServerRepository.SearchServers(serverFilter);
-        this.selectedCity = string.Empty;
+        // this.servers = ServerRepository.SearchServers(serverFilter);
+        // this.selectedCity = string.Empty;
+    }
+
+    private void HandleCitySelection(string cityName)
+    {
+        Selectedcity = cityName;
+        this.searchFilter = string.Empty;
+        searchBarComponent?.ClearFilter();
+    }
+
+    private void HandleSearchServer(string searchFilter)
+    {
+        this.searchFilter = searchFilter;
+        cityListComponent?.ClearSelection();
     }
 }
