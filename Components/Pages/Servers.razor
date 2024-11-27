@@ -7,9 +7,9 @@
 
 <br />
 
-<SearchBarComponent @ref="searchBarComponent" SearchServerCallback="HandleSearchServer"></SearchBarComponent>
+<SearchBarComponent @ref="searchBarComponent" SearchServerCallback="HandleSearchServer" style="width:20px"></SearchBarComponent>
 
-<CascadingValue Name="SelectedCity" Value="@Selectedcity"> 
+<CascadingValue Name="SelectedCity" Value="@Selectedcity">
     @* <ServerListComponent @rendermode="InteractiveServer" CityName="@this.selectedCity"></ServerListComponent> *@
 
     <ServerListComponent @rendermode="InteractiveServer" CityName="@this.Selectedcity" SearchFilter="@searchFilter"></ServerListComponent>
