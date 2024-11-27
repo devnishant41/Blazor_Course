@@ -1,0 +1,43 @@
+﻿@page "/server/{id:int?}"
+
+
+<h3>AddEditServer</h3>
+
+@if (Id.HasValue)
+{
+    <h3>Edit Server</h3>
+}
+else
+{
+    <h3>Add Server</h3>
+}
+@code {
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Server? server { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? City { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        if (this.Id.HasValue)
+        {
+            server ??= ServerRepository.GetServerById(this.Id.Value);
+        }
+        else
+        {
+            server ??= new Server() { IsOnline = false };
+        }
+
+        if (server != null && !string.IsNullOrEmpty(this.City))
+        {
+            server.City = this.City;
+        }
+    }
+
+}

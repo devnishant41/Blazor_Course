@@ -12,7 +12,9 @@
 
 @code {
     private List<string> cities = CityRepository.GetCities();
-    private string selectedCity = "London";
+
+    [Parameter]
+    public string selectedCity { get; set; } = "London";
     [Parameter]
     public EventCallback<string> SelectCityCallback { get; set; }
 
