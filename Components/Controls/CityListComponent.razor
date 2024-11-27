@@ -1,4 +1,6 @@
-﻿@if (cities != null && cities.Count > 0)
+﻿@implements IDisposable
+
+@if (cities != null && cities.Count > 0)
 {
     <div class="container-fluid text-center mb-5">
         <div class="row w-80">
@@ -11,6 +13,7 @@
 }
 
 @code {
+
     private List<string> cities = CityRepository.GetCities();
     private string selectedCity = "London";
     [Parameter]
@@ -20,8 +23,6 @@
     {
         this.selectedCity = string.Empty;
     }
-
-
 
     private void SelectCity(string city)
     {
@@ -33,5 +34,48 @@
     {
         selectedCity = cityName;
         SelectCityCallback.InvokeAsync(cityName);
+    }
+
+    // rendering
+
+    protected override bool ShouldRender()
+    {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"City Component {nameof(ShouldRender)}  {guid}");
+        return base.ShouldRender();
+    }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent {nameof(SetParametersAsync)}  {guid}");
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent {nameof(OnInitialized)}  {guid}");
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent {nameof(OnParametersSet)}  {guid}");
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent {nameof(OnAfterRender)}  {guid}");
+    }
+
+    public void Dispose()
+    {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent {nameof(Dispose)}  {guid}");
     }
 }

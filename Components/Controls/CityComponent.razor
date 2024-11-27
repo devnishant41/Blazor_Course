@@ -23,6 +23,47 @@
     {
         //let parent know which city is clicked
         SelectCityCallback.InvokeAsync(CityName);
+    }   
+
+    // rendering
+    protected override bool ShouldRender()
+    {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"City Component {nameof(ShouldRender)}  {guid}");
+        return base.ShouldRender();
     }
 
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"City Component {nameof(SetParametersAsync)}  {guid}");
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"City Component {nameof(OnInitialized)}  {guid}");
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"City Component {nameof(OnParametersSet)}  {guid}");
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"City Component {nameof(OnAfterRender)}  {guid}");
+    }
+
+    public void Dispose()
+    {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"City Component {nameof(Dispose)}  {guid}");
+    }
 }
