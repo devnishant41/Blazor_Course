@@ -1,15 +1,28 @@
-﻿<div class="col">
+﻿@using App_01_ServerManagement.StateStore
+@inject LondonOnlineServers londonOnlineServers
+@implements IDisposable
+<div class="col">
     <div class="card" style="background-color:@(city == selectedCity ? "blue" : "white" )">
         <img src="@($"/images/{city}.jpg")" class="card-img-top" alt="...">
         <div class="card-body">
             <button type="button" class="btn btn-primary btn-sm" @onclick="@(()=>{SelectCity(city);})">@city</button>
             <text>&nbsp;</text>
         </div>
+        <div>
+            @if (city.Equals("London", StringComparison.OrdinalIgnoreCase))
+            {
+                <text>@numberOfServersOnline</text>
+            }
+        </div>
     </div>
 </div>
 
 
 @code {
+
+    private int numberOfServersOnline;
+
+
     [Parameter]
     public string selectedCity { get; set; } = "London";
 
@@ -25,4 +38,25 @@
         SelectCityCallback.InvokeAsync(CityName);
     }
 
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            numberOfServersOnline = londonOnlineServers.GetNumberOfServersOnline();
+            londonOnlineServers.AddStateChangeListeners(OnServerStatusChange);
+            StateHasChanged();
+        }
+    }
+
+    private void OnServerStatusChange()
+    {
+        numberOfServersOnline = londonOnlineServers.GetNumberOfServersOnline();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        londonOnlineServers.RemoveStateChangeListeners(OnServerStatusChange);
+    }
 }

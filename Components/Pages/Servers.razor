@@ -1,7 +1,12 @@
 ﻿@page "/servers"
 @page "/servers/back_from/{cityName}"
 @rendermode InteractiveServer
+
+@using App_01_ServerManagement.StateStore
 @inject NavigationManager NavigationManager
+@inject LondonOnlineServers londonOnlineStores
+
+
 <h3>Servers</h3>
 
 <CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection" selectedCity="@this.Selectedcity"> </CityListComponent>
@@ -68,6 +73,12 @@
             {
                 Selectedcity = CityName;
                 StateHasChanged();
+            }
+
+            var serversLondon = ServerRepository.GetServerByCity("London");
+            if (serversLondon is not null)
+            {
+                londonOnlineStores.SetNumberOfServersOnline(serversLondon.Count(x => x.IsOnline));
             }
         }
     }

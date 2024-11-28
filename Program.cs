@@ -1,4 +1,5 @@
 using App_01_ServerManagement.Components;
+using App_01_ServerManagement.StateStore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,8 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var app = builder.Build();
+builder.Services.AddTransient<SessionStorage>();
+builder.Services.AddScoped<ContainerStorage>();
+builder.Services.AddScoped<LondonOnlineServers>();
 
+var app = builder.Build();
+  
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
