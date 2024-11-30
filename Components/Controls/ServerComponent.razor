@@ -1,6 +1,7 @@
 ﻿@using App_01_ServerManagement.StateStore
 @inject NavigationManager NavigationManager
 @inject LondonOnlineServers LondonOnlineServers
+@inject IServersEFCoreRepository ServerEFCoreRepository
 @if (Server != null)
 {
     <tr style="background-color: @GetBackGroundColor()">
@@ -82,7 +83,7 @@
         if (ServerId > 0)
         {
 
-            ServerRepository.DeleteServer(ServerId);
+            ServerEFCoreRepository.DeleteServer(ServerId);
         }
         NavigationManager.NavigateTo("/Servers", true);
     }
@@ -113,7 +114,7 @@
             {
                 if (this.Server.City.Equals("London", StringComparison.OrdinalIgnoreCase))
                 {
-                   var num = LondonOnlineServers.GetNumberOfServersOnline();
+                    var num = LondonOnlineServers.GetNumberOfServersOnline();
                     if (status)
                     {
                         LondonOnlineServers.SetNumberOfServersOnline(num + 1);
@@ -122,6 +123,8 @@
                         LondonOnlineServers.SetNumberOfServersOnline(num - 1);
                 }
                 this.Server.IsOnline = status;
+
+                ServerEFCoreRepository.UpdateServer(this.Server.ServerId, Server);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿@page "/quickgrid"
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject NavigationManager NavigationManager
+@inject IServersEFCoreRepository ServerEFCoreRepository
 @rendermode InteractiveServer
 <h3>QuickGridDemo</h3>
 
@@ -72,18 +73,27 @@
         </TemplateColumn>
     </QuickGrid>
     <Paginator State="paginationState"></Paginator>
-               }
-               @code {
-               private List<Server>? servers = ServerRepository.GetServers();
+}
+@code {
+    private List<Server>? servers;
 
-        private PaginationState paginationState = new PaginationState { ItemsPerPage = 5 };
-        private void DeleteServer(int ServerId)
+    private PaginationState paginationState = new PaginationState { ItemsPerPage = 5 };
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
         {
-            if (ServerId > 0)
-            {
-
-                ServerRepository.DeleteServer(ServerId);
-            }
-            NavigationManager.NavigateTo("/quickgrid", true);
+            servers = ServerEFCoreRepository.GetServers();
         }
     }
+
+    private void DeleteServer(int ServerId)
+    {
+        if (ServerId > 0)
+        {
+
+            ServerEFCoreRepository.DeleteServer(ServerId);
+        }
+        NavigationManager.NavigateTo("/quickgrid", true);
+    }
+}

@@ -1,7 +1,7 @@
 ﻿@page "/servers"
 @page "/servers/back_from/{cityName}"
 @rendermode InteractiveServer
-
+@inject IServersEFCoreRepository ServerEFCoreRepository
 @using App_01_ServerManagement.StateStore
 @inject NavigationManager NavigationManager
 @inject LondonOnlineServers londonOnlineStores
@@ -48,7 +48,7 @@
 
     private void HandleSearch()
     {
-        // this.servers = ServerRepository.SearchServers(serverFilter);
+        // this.servers = ServerEFCoreRepository.SearchServers(serverFilter);
         // this.selectedCity = string.Empty;
     }
 
@@ -75,7 +75,7 @@
                 StateHasChanged();
             }
 
-            var serversLondon = ServerRepository.GetServerByCity("London");
+            var serversLondon = ServerEFCoreRepository.GetServerByCity("London");
             if (serversLondon is not null)
             {
                 londonOnlineStores.SetNumberOfServersOnline(serversLondon.Count(x => x.IsOnline));

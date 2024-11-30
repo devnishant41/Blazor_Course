@@ -1,7 +1,7 @@
 ﻿@page "/servers/add"
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
-
+@inject IServersEFCoreRepository ServerEFCoreRepository
 <h3>AddServer</h3>
 @* form to add server *@
 
@@ -55,7 +55,7 @@
     private void Submit()
     {
         // add server to the list
-        ServerRepository.AddServer(server);
+        ServerEFCoreRepository.AddServer(server);
         NavigationManager.NavigateTo("/servers");
 
     }
